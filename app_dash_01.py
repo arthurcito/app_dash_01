@@ -29,7 +29,7 @@ opcoes.append('Todos os Produtos de Área Queimada')
 # Arquivo csv oriundo do mapa de interesse:
 df_map = pd.read_csv('https://raw.githubusercontent.com/arthurcito/app_dash_01/main/municipios_x_coded_csv.csv')
 # Criação do GeoDataFrame. O arquivo geojson deve estar em WGS84:
-gdf = gpd.read_file('/home/arthurcito/app_dash_01/municipios_x_coded_wgs84.geojson').merge(df_map, on="nome").set_index("nome") # Mescla do gdf com o df_map.
+gdf = gpd.read_file('https://github.com/arthurcito/app_dash_01/blob/7ff8884d51e7c21fb833c784c0ffc05e4102a63e/municipios_x_coded_wgs84.geojson').merge(df_map, on="nome").set_index("nome") # Mescla do gdf com o df_map.
 # Criação da fig referente ao mapa:
 fig_map = px.choropleth(gdf,
                    geojson=gdf.geometry,
