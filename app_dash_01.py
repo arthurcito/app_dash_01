@@ -47,12 +47,10 @@ fig_map = px.choropleth_mapbox(df_map,
                          center = {'lat':0.4, 'lon': -61.0},
                          zoom = 5.5,
                          opacity = 0.8, )
-fig.update_geos(fitbounds = 'locations', visible = False)
+fig_map.update_geos(fitbounds = 'locations', visible = False)
 fig_map.update_layout(
-    #plot_bgcolor=colors['background'], # Este update não teve resposta no plot do mapa.
     paper_bgcolor=colors['background'],
     font_color=colors['text'],
-    #template='plotly_dark' # Um dos templates padrão do plotly. Aqui teve uma resposta positiva no background do plot mapa.
 )
 fig_map.layout.coloraxis.colorbar.title = 'Cicatrizes de Fogo (km²)' #Modifica o título da barra de legenda da coloração.
 
