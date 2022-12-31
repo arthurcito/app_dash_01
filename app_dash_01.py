@@ -1,7 +1,8 @@
 from dash import Dash, html, dcc, Input, Output
 import plotly.express as px
 import pandas as pd
-import geopandas as gpd
+import json
+from urllib.request import urlopen
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css'] # Marcação CSS externa para criação de estilos de layout.
 
@@ -28,22 +29,31 @@ opcoes.append('Todos os Produtos de Área Queimada')
 
 # Arquivo csv oriundo do mapa de interesse:
 df_map = pd.read_csv('https://raw.githubusercontent.com/arthurcito/app_dash_01/main/municipios_x_coded_csv.csv')
-# Criação do GeoDataFrame. O arquivo geojson deve estar em WGS84:
-gdf = gpd.read_file('https://github.com/arthurcito/app_dash_01/blob/7ff8884d51e7c21fb833c784c0ffc05e4102a63e/municipios_x_coded_wgs84.geojson').merge(df_map, on="nome").set_index("nome") # Mescla do gdf com o df_map.
+df_map.rename(columns={'geocodigo':'id'}, inplace=True)
+with urlopen('https://raw.githubusercontent.com/arthurcito/app_dash_01/main/mun_rr.json') as response:
+    geo_json_rr = json.load(response)
+geo_json_rr
+
 # Criação da fig referente ao mapa:
-fig_map = px.choropleth(gdf,
-                   geojson=gdf.geometry,
-                   locations=gdf.index,
-                   color="coded_km2_x", # A variável 'color' não deve ser o nome da coluna original do dado, e sim o novo nome dado ao mesclar (merge) os dois dados.
-                   color_continuous_scale="viridis",
-                   labels = 'Teste',
-                   projection="mercator")
-fig_map.update_geos(fitbounds='locations', visible=False)
+fig_map = px.choropleth_mapbox(df_map,
+                         geojson = geo_json_rr,
+                         locations='id',
+                         featureidkey = 'properties.id',
+                         color = 'coded_km2',
+                         hover_name = 'nome',
+                         hover_data = ['coded_km2'],
+                         title = 'Cicatrizes de Fogo Roraima',
+                         color_continuous_scale='Viridis',
+                         mapbox_style = 'carto-darkmatter', #defining a new map style
+                         center = {'lat':0.4, 'lon': -61.0},
+                         zoom = 5.5,
+                         opacity = 0.8, )
+fig.update_geos(fitbounds = 'locations', visible = False)
 fig_map.update_layout(
     #plot_bgcolor=colors['background'], # Este update não teve resposta no plot do mapa.
     paper_bgcolor=colors['background'],
     font_color=colors['text'],
-    template='plotly_dark' # Um dos templates padrão do plotly. Aqui teve uma resposta positiva no background do plot mapa.
+    #template='plotly_dark' # Um dos templates padrão do plotly. Aqui teve uma resposta positiva no background do plot mapa.
 )
 fig_map.layout.coloraxis.colorbar.title = 'Cicatrizes de Fogo (km²)' #Modifica o título da barra de legenda da coloração.
 
