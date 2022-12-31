@@ -20,7 +20,7 @@ colors = { # Definindo variáveis de coloração do estilo do dashboard.
 df = pd.read_csv('https://raw.githubusercontent.com/arthurcito/app_dash_01/main/produtos_x_classes_fundiarias.csv')
 
 # 'fig' é quem está criand o gráfico:
-fig = px.bar(df, x="Classe Fundiaria", y="Area em Km2", color="Produto", barmode="group")
+fig = px.bar(df, x="Classe Fundiária", y="Área em Km2", color="Produto", barmode="group")
 opcoes = list(df['Produto'].unique()) # Lista de opções da coluna 'Produto'. Sem repetição dos nomes.
 opcoes.append('Todos os Produtos de Área Queimada')
 
@@ -42,7 +42,6 @@ fig_map = px.choropleth_mapbox(df_map,
                          color = 'coded_km2',
                          hover_name = 'nome',
                          hover_data = ['coded_km2'],
-                         title = 'Cicatrizes de Fogo Roraima',
                          color_continuous_scale='Viridis',
                          mapbox_style = 'carto-darkmatter', #defining a new map style
                          center = {'lat':0.4, 'lon': -61.0},
@@ -115,7 +114,7 @@ app.layout = html.Div(style={'backgroundColor': colors['background']}, children=
 )
 def update_output(value):
     if value=='Todos os Produtos de Área Queimada':
-        fig = px.bar(df, x="Classe Fundiaria", y="Area em Km2", color="Produto", barmode="group") # É necessário a reconstrução da fig aqui.
+        fig = px.bar(df, x="Classe Fundiária", y="Área em Km2", color="Produto", barmode="group") # É necessário a reconstrução da fig aqui.
         fig.update_layout(
             plot_bgcolor=colors['background'],
             paper_bgcolor=colors['background'],
@@ -123,7 +122,7 @@ def update_output(value):
         )
     else:
         tabela_filtrada = df.loc[df['Produto']==value, :] # Argumentos do dc.loc == [linhas, colunas]
-        fig = px.bar(tabela_filtrada, x="Classe Fundiaria", y="Area em Km2", color="Produto", barmode="group")
+        fig = px.bar(tabela_filtrada, x="Classe Fundiária", y="Área em Km2", color="Produto", barmode="group")
         fig.update_layout(
             plot_bgcolor=colors['background'],
             paper_bgcolor=colors['background'],
