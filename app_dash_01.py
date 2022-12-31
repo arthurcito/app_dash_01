@@ -16,10 +16,10 @@ colors = { # Definindo variáveis de coloração do estilo do dashboard.
 # Painel do Gráfico:
 
 # 'df' é a base de dados que alimenta o dashboard:
-df = pd.read_excel('produtos_x_classes_fundiarias.xlsx')
+df = pd.read_csv('https://raw.githubusercontent.com/arthurcito/app_dash_01/main/produtos_x_classes_fundiarias.csv')
 
 # 'fig' é quem está criand o gráfico:
-fig = px.bar(df, x="Classe Fundiária", y="Área em Km²", color="Produto", barmode="group")
+fig = px.bar(df, x="Classe Fundiaria", y="Area em Km2", color="Produto", barmode="group")
 opcoes = list(df['Produto'].unique()) # Lista de opções da coluna 'Produto'. Sem repetição dos nomes.
 opcoes.append('Todos os Produtos de Área Queimada')
 
@@ -27,9 +27,9 @@ opcoes.append('Todos os Produtos de Área Queimada')
 # Painel do Mapa:
 
 # Arquivo csv oriundo do mapa de interesse:
-df_map = pd.read_csv('municipios_x_coded_csv.csv')
+df_map = pd.read_csv('https://raw.githubusercontent.com/arthurcito/app_dash_01/main/municipios_x_coded_csv.csv')
 # Criação do GeoDataFrame. O arquivo geojson deve estar em WGS84:
-gdf = gpd.read_file('municipios_x_coded_wgs84.geojson').merge(df_map, on="nome").set_index("nome") # Mescla do gdf com o df_map.
+gdf = gpd.read_file('/home/arthurcito/app_dash_01/municipios_x_coded_wgs84.geojson').merge(df_map, on="nome").set_index("nome") # Mescla do gdf com o df_map.
 # Criação da fig referente ao mapa:
 fig_map = px.choropleth(gdf,
                    geojson=gdf.geometry,
@@ -74,7 +74,7 @@ app.layout = html.Div(style={'backgroundColor': colors['background']}, children=
             # Componente que ativa o dropdown:
             dcc.Dropdown(opcoes, style={'background':colors['background'], 'font-size':20},
                          value='Todos os Produtos de Área Queimada', id='lista_produtos'),
-            
+
             # 'dcc' é dash component core. Tudo que está relacionado aos gráficos é oriundo desta biblioteca:
             dcc.Graph(
                 id='grafico_cicatrizes_x_classes',
@@ -105,7 +105,7 @@ app.layout = html.Div(style={'backgroundColor': colors['background']}, children=
 )
 def update_output(value):
     if value=='Todos os Produtos de Área Queimada':
-        fig = px.bar(df, x="Classe Fundiária", y="Área em Km²", color="Produto", barmode="group") # É necessário a reconstrução da fig aqui.
+        fig = px.bar(df, x="Classe Fundiaria", y="Area em Km2", color="Produto", barmode="group") # É necessário a reconstrução da fig aqui.
         fig.update_layout(
             plot_bgcolor=colors['background'],
             paper_bgcolor=colors['background'],
@@ -113,7 +113,7 @@ def update_output(value):
         )
     else:
         tabela_filtrada = df.loc[df['Produto']==value, :] # Argumentos do dc.loc == [linhas, colunas]
-        fig = px.bar(tabela_filtrada, x="Classe Fundiária", y="Área em Km²", color="Produto", barmode="group")
+        fig = px.bar(tabela_filtrada, x="Classe Fundiaria", y="Area em Km2", color="Produto", barmode="group")
         fig.update_layout(
             plot_bgcolor=colors['background'],
             paper_bgcolor=colors['background'],
